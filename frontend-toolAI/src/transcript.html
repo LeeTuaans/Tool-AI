@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chuyển transcript thành kịch bản</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../frontend-toolAI/CSS/style2.css" />
+</head>
+  <div class="wrapper">
+    <div class="left">
+      <h3>🔴 Nhập đường link video → lấy transcript → tạo kịch bản
+      </h3>
+      <p>Nhập đường link youtube, sau đó lấy transcript vàn bản, sau đó viết lại kịch bản của video.</p>
+      <label>1 → Nhập link video của bạn</label>
+      <input type="text" placeholder="https://www.youtube.com/watch?v=abc123" />
+      <label>2 → Cài đặt khác</label>
+      <select>
+        <option>Kiểu video: Review</option>
+        <option>Kiểu video: Giáo dục</option>
+        <option>Kiểu video: Vlog</option>
+      </select>
+      <button onclick="generateScript()">Tạo kịch bản</button>
+    </div>
+    <div class="right">
+      <div class="output-box">
+        <h4>Tiêu đề:</h4>
+        <p id="output">Video "Trọn bộ 300 ngày trong Stardew Valley (hoàn hào 100%)" là một hành trình dài và chi tiết của người chơi đạt được mức hoàn hào 100% trong trò chơi Stardew Valley sau 300 ngày chơi...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function generateScript() {
+      const output = document.getElementById("output");
+      output.textContent = `Video \"Trọn bộ 300 ngày trong Stardew Valley (hoàn hào 100%)\" là một hành trình dài và chi tiết của người chơi...`;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chuyển văn bản thành giọng nói</title>
+  <link rel="stylesheet" href="../CSS/styleTTS.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Chuyển văn bản thành giọng nói</h1>
+    <p>Nhập đoạn văn bản bất kỳ, chuyển văn bản đó thành giọng nói, tải về file dạng âm thanh</p>
+
+    <div class="form-wrapper">
+      <div class="form-left">
+        <label for="language">Ngôn ngữ</label>
+        <select id="language">
+          <option>Tiếng Việt</option>
+        </select>
+      
+        <label>Giọng nói</label>
+        <div class="voice-list">
+          <div class="voice-card selected">
+            <div class="voice-icon" style="background-color: #e74c3c;"></div>
+            <div class="voice-info">
+              <p class="voice-name">Giọng nam miền Nam</p>
+              <p class="voice-desc">Tự nhiên, ấm áp</p>
+            </div>
+          </div>
+      
+          <div class="voice-card">
+            <div class="voice-icon" style="background-color: #2980b9;"></div>
+            <div class="voice-info">
+              <p class="voice-name">Giọng nữ miền Trung</p>
+              <p class="voice-desc">Rõ ràng, truyền cảm</p>
+            </div>
+          </div>
+      
+          <div class="voice-card">
+            <div class="voice-icon" style="background-color: #f1c40f;"></div>
+            <div class="voice-info">
+              <p class="voice-name">Giọng nam Hà Nội</p>
+              <p class="voice-desc">Chuẩn mực, nhẹ nhàng</p>
+            </div>
+          </div>
+          <div class="voice-card">
+            <div class="voice-icon" style="background-color: #2980b9;"></div>
+            <div class="voice-info">
+              <p class="voice-name">Giọng nữ miền Trung</p>
+              <p class="voice-desc">Rõ ràng, truyền cảm</p>
+            </div>
+          </div>
+          <div class="voice-card">
+            <div class="voice-icon" style="background-color: #2980b9;"></div>
+            <div class="voice-info">
+              <p class="voice-name">Giọng nữ miền Trung</p>
+              <p class="voice-desc">Rõ ràng, truyền cảm</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-right">
+        <label for="speed">Tốc độ đọc</label>
+        <select id="speed">
+          <option>1x</option>
+          <option>1.25x</option>
+          <option>1.5x</option>
+        </select>
+
+        <label for="text" class="required">📕 Nhập đoạn văn bản</label>
+        <textarea id="text" rows="10">Ẩm thực Việt Nam không chỉ ngon mà còn khiến cả thế giới mê mẩn. Trong video hôm nay, cùng mình điểm qua 5 món...</textarea>
+      </div>
+    </div>
+
+    <div class="button-wrapper">
+      <button id="generate">Tạo giọng nói</button>
+    </div>
+
+    <div class="player">
+      <button class="play-btn">▶️</button>
+      <span>00:50</span>
+      <input type="range" min="0" max="240" value="50">
+      <span>04:00</span>
+    </div>
+
+    <div class="button-wrapper">
+      <button id="download">Tải xuống</button>
+    </div>
+  </div>
+</body>
+</html>

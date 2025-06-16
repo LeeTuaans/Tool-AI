@@ -43,7 +43,7 @@ label {
 }
 
 select, textarea {
-  width: 100%;
+  
   padding: 8px;
   font-size: 15px;
   border: 1px solid #ccc;
@@ -51,14 +51,29 @@ select, textarea {
   margin-bottom: 20px;
   box-sizing: border-box;
 }
-
+select
+{
+    width: 200px;
+  padding: 8px 36px 8px 8px;
+  font-size: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  appearance: none; 
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: url("data:image/svg+xml;utf8,<svg fill='%23666' height='12' viewBox='0 0 24 24' width='12' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>") no-repeat right 12px center;
+  background-color: #fff;
+  background-size: 12px;
+}
 textarea {
+  width: 100%;
   resize: none;
   height: 270px;
 }
 
 .required {
-  color: #e74c3c;
   font-weight: bold;
 }
 

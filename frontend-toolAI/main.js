@@ -1,18 +1,21 @@
 // Modules to control application life and create native browser window
 const { app, BrowserWindow } = require('electron')
 const path = require('node:path')
+const { ipcMain } = require('electron');
+let mainWindow; // Cần nâng scope lên toàn cục để load lại file
 
 function createWindow () {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width:1000,
     height: 900,
     webPreferences: {
-      contextIsolation: true, 
-      preload: path.join(__dirname, 'preload.js')
+      nodeIntegration: true, 
+      contextIsolation: false,
+      // preload: path.join(__dirname, 'preload.js')
     }
   })
-
+  
   // and load the index.html of the app.
   mainWindow.loadFile('../frontend-toolAI/src/TTS.html')
 
@@ -42,3 +45,11 @@ app.on('window-all-closed', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+// Lắng nghe yêu cầu điều hướng từ renderer (menu.html)
+ipcMain.on('navigate-to', (event, targetHtml) => {
+  const filePath = path.join(__dirname, 'src', targetHtml);
+  if (mainWindow) {
+    mainWindow.loadFile(filePath);
+  }
+});

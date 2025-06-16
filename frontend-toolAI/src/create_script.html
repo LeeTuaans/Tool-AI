@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chức năng Gợi ý kịch bản</title>
+  <link rel="stylesheet" href="../CSS/style_create_script.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <div class="container">
+    <!-- Bên trái -->
+    <div class="left-panel">
+      <h2>🎧 Chức năng Gợi ý kịch bản</h2>
+      <p class="desc">Đưa ra tiêu đề video, sau đó gợi ý kịch bản video.</p>
+
+      <div>
+        <label for="video-title">1️⃣ Nhập tiêu đề video của bạn</label>
+        <textarea id="video-title" placeholder="Ví dụ: Ẩm thực Việt..."></textarea>
+      </div>
+
+      <div class="option">
+        <label>2️⃣ 🔑 Cài Đặt Khác</label>
+        <div class="checkbox-group">
+          <label><input type="checkbox" value="food"> Kịch bản ẩm thực</label><br>
+          <label><input type="checkbox" value="review"> Kịch bản review</label><br>
+          <label><input type="checkbox" value="vlog"> Kịch bản vlog</label>
+        </div>
+      </div>
+
+      <button class="btn">Tạo kịch bản</button>
+    </div>
+
+    <!-- Bên phải -->
+    <div class="right-panel">
+      <h3>Play Ground</h3>
+      <div class="output-box">
+        <h3>Kịch bản gợi ý:</h3>
+        <p>“Bạn đã bao giờ thắc mắc vì sao ẩm thực Việt lại khiến cả thế giới phát cuồng? Hôm nay, mình sẽ dẫn các bạn đi một vòng Hà Nội để khám phá những món ăn ‘quốc dân’ vừa ngon, vừa lạ...”</p>
+
+        <h3>Gợi ý khác:</h3>
+        <p>Ẩm thực Việt Nam không chỉ ngon mà còn khiến cả thế giới mê mẩn. Trong video này, cùng mình dừng chân tại 5 món ăn Việt khiến người nước ngoài ‘ăn là nghiện’ nhé!</p>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

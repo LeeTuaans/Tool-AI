@@ -17,7 +17,7 @@ function createWindow () {
   })
   
   // and load the index.html of the app.
-  mainWindow.loadFile('../frontend-toolAI/src/TTS.html')
+  mainWindow.loadFile('../frontend-toolAI/src/login.html')
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()

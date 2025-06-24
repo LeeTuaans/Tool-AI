@@ -17,38 +17,37 @@
 
       <div>
         <label for="video-title">1️⃣ Nhập nội dung video của bạn</label>
-        <textarea id="video-title" placeholder="Ví dụ: Video về nấu ăn các món Hà Nội trong 30 phút, gồm có các món..."></textarea>
+        <textarea id="video-title" placeholder="Ví dụ: Video về nấu ăn các món Hà Nội trong 30 phút, gồm có các món..." spellcheck="false"></textarea>
       </div>
 
       <div class="option">
         <label>2️⃣ 🔑 Cài Đặt Khác</label>
         <div class="checkbox-group">
-          <label><input type="checkbox" value="food"> Tiêu đề dành cho trẻ em</label><br>
-          <label><input type="checkbox" value="review"> Tiêu đề giới hạn trong 10 từ</label><br>
-          <label><input type="checkbox" value="vlog"> Tiêu đề vlog</label>
+          <label><input type="checkbox" value="Trẻ em"> Tiêu đề dành cho trẻ em</label><br>
+          <label><input type="checkbox" value="Ngắn"> Tiêu đề giới hạn trong 10 từ</label><br>
+          <label><input type="checkbox" value="Vlog"> Tiêu đề vlog</label>
         </div>
       </div>
 
-      <button class="btn">Tạo tiêu đề</button>
+      <button class="btn" id="generate-btn">Tạo tiêu đề</button>
     </div>
 
     <!-- Bên phải -->
     <div class="right-panel">
-      <h3>Play Ground</h3>
-      <div class="output-box">
+      <h3>Tiêu đề gợi ý</h3>
+      <div class="output-box" id="output-box">
         <h3>Tiêu đề gợi ý:</h3>
-        <ul>
-          <li>Hành trình ẩm thực Hà Nội</li>
-          <li>Tất tần tật về món ăn ngon ở Hà Nội</li>
+        <ul id="suggested-titles">
         </ul>
 
         <h3>Gợi ý khác:</h3>
-        <ul>
-          <li>Hành trình chinh phục tất cả món ngon có mặt ở thủ đô Việt Nam và thưởng thức các đặc sản Hà Nội</li>
+        <ul id="other-suggestions">
+          <!-- Gợi ý dài hơn sẽ hiển thị ở đây -->
         </ul>
       </div>
     </div>
   </div>
 
+<script src="../JavaScript/renderer.js"></script>
 </body>
 </html>

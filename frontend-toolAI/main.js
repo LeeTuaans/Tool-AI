@@ -53,3 +53,10 @@ ipcMain.on('navigate-to', (event, targetHtml) => {
     mainWindow.loadFile(filePath);
   }
 });
+
+// IPC từ renderer.js
+ipcMain.handle('generate-title', async (event, prompt) => {
+  const result = await generateTitle(prompt);
+  return result;
+});
+

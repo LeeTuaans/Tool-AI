@@ -1,5 +1,3 @@
-// const apiKey = "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";
-
 // document.getElementById("generate-btn").addEventListener("click", async () => {
 //   const videoContent = document.getElementById("video-title").value.trim();
 //   const checkboxes = document.querySelectorAll('.checkbox-group input[type="checkbox"]:checked');
@@ -69,7 +67,9 @@
 //   }
 // });
 //-----------------------------------------------------------------------------------------------------
-const apiKey = "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";
+require('dotenv').config(); // Nạp biến môi trường từ .env
+const apiKey = process.env.OPENAI_API_KEY;
+console.log("API Key:", apiKey); // Kiểm tra nếu cần
 
 // ====== GẮN SỰ KIỆN CHO CÁC TRANG KHÁC NHAU ======
 window.addEventListener("DOMContentLoaded", () => {

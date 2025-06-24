@@ -68,7 +68,7 @@
 // });
 //-----------------------------------------------------------------------------------------------------
 require('dotenv').config(); // Nạp biến môi trường từ .env
-const apiKey = process.env.OPENAI_API_KEY;
+// const apiKey = process.env.OPENAI_API_KEY;
 console.log("API Key:", apiKey); // Kiểm tra nếu cần
 
 // ====== GẮN SỰ KIỆN CHO CÁC TRANG KHÁC NHAU ======

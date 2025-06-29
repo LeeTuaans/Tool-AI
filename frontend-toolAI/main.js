@@ -1,6 +1,8 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const path = require('node:path')
+const fs = require('node:fs')
+const {generateTTSBuffer} = require('./Javascript/tts') // Import your TTS service
 
 function createWindow () {
   // Create the browser window.
@@ -9,12 +11,12 @@ function createWindow () {
     height: 900,
     webPreferences: {
       contextIsolation: true, 
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname,'Javascript', 'preload.js'), // Ensure the preload script is correctly referenced
     }
   })
-
+ 
   // and load the index.html of the app.
-  mainWindow.loadFile('../frontend-toolAI/src/TTS.html')
+  mainWindow.loadFile('src/TTS.html')
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
@@ -32,6 +34,36 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
 })
+
+// generate TTS buffer (chỉ tạo, không lưu)
+ipcMain.handle('tts:generate-buffer', async (event, { text, voice, speed }) => {
+  try {
+    const buffer = await generateTTSBuffer(text, voice, speed);
+    return buffer;
+  } catch (err) {
+    console.error('Lỗi generateBuffer:', err);
+    return null;
+  }
+});
+
+// Lưu buffer thành file
+ipcMain.handle('tts:save-buffer', async (event, buffer) => {
+  try {
+    const { filePath, canceled } = await dialog.showSaveDialog({
+      title: 'Lưu file âm thanh',
+      defaultPath: 'output.mp3',
+      filters: [{ name: 'MP3 Files', extensions: ['mp3'] }]
+    });
+    if (!canceled && filePath) {
+      fs.writeFileSync(filePath, Buffer.from(buffer));
+      return true;
+    }
+    return false;
+  } catch (err) {
+    console.error('Lỗi lưu file:', err);
+    return false;
+  }
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits

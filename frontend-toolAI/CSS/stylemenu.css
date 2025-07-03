@@ -81,3 +81,7 @@ body {
   font-size: 0.95rem;
   line-height: 1.4;
 }
+/* Bỏ gạch chân cho tất cả các thẻ a */
+a {
+  text-decoration: none;
+}

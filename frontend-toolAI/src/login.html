@@ -2,7 +2,8 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
+    <meta http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' https://www.gstatic.com https://www.googleapis.com 'unsafe-inline' 'unsafe-eval'; connect-src *; style-src 'self' 'unsafe-inline';">
     <link rel="stylesheet" href="../CSS/style.css" />
     <title>Tool AI</title>
   </head>
@@ -19,13 +20,14 @@
         <label>Mật khẩu</label>
         <input type="password" placeholder="Mật khẩu" id="password-login" />
 
-        <button onclick="login()">Đăng Nhập</button>
+        <!-- <button onclick="login()">Đăng Nhập</button> -->
 
         <p>Chưa có tài khoản? <a href="../src/register.html">Đăng ký</a></p>
+        <button id="login-btn">Đăng Nhập</button>
+
       </div>
     </div>
-
-    <script src="./renderer.js"></script>
-    <script type="module" src="../frontend-toolAI/script.js"></script>
+    <!-- <script src="../JavaScript/renderer.js"></script> -->
+    <script src="../../frontend-toolAI/dist/bundle.js"></script>
   </body>
 </html>

@@ -3,25 +3,47 @@ const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const path = require('node:path')
 const fs = require('node:fs')
 const {generateTTSBuffer} = require('./Javascript/tts') // Import your TTS service
+// require('dotenv').config(); 
+let mainWindow; // Cần nâng scope lên toàn cục để load lại file
 
 function createWindow () {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width:1000,
     height: 900,
+    title: "Tool AI",
     webPreferences: {
-      contextIsolation: true, 
+      contextIsolation: true,
+      nodeIntegration: true, 
+      contextIsolation: false,
       preload: path.join(__dirname,'Javascript', 'preload.js'), // Ensure the preload script is correctly referenced
     }
   })
- 
+  
   // and load the index.html of the app.
-  mainWindow.loadFile('src/TTS.html')
+  mainWindow.loadFile(path.join(__dirname, 'src', 'login.html'))
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 }
+// Lắng nghe yêu cầu điều hướng từ renderer (menu.html)
+ipcMain.on('navigate-to', (event, targetHtml) => {
+  const filePath = path.join(__dirname, 'src', targetHtml);
+  if (mainWindow) {
+    mainWindow.loadFile(filePath);
+  }
+});
 
+// IPC từ renderer.js
+ipcMain.handle('generate-title', async (event, prompt) => {
+  const result = await generateTitle(prompt);
+  return result;
+});
+
+// Gửi API key cho renderer
+ipcMain.handle('get-api-key', () => {
+  return process.env.OPENAI_API_KEY;
+});
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.

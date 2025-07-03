@@ -67,8 +67,9 @@
 //   }
 // });
 //-----------------------------------------------------------------------------------------------------
-
-
+// renderer.js
+require('dotenv').config();
+const apiKey = process.env.OPENAI_API_KEY;
 
 // ====== GẮN SỰ KIỆN CHO CÁC TRANG KHÁC NHAU ======
 window.addEventListener("DOMContentLoaded", () => {
@@ -108,6 +109,8 @@ async function fetchGPTResponse(prompt) {
   const data = await response.json();
   return data.choices[0].message.content;
 }
+
+
 
 // ====== CHỨC NĂNG TẠO TIÊU ĐỀ ======
 function setupTitleGenerator() {

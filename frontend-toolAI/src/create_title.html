@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
   <title>Chức năng Gợi ý kịch bản</title>
   <link rel="stylesheet" href="../CSS/style_create_script.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -17,7 +18,7 @@
 
       <div>
         <label for="video-title">1️⃣ Nhập nội dung video của bạn</label>
-        <textarea id="video-title" placeholder="Ví dụ: Video về nấu ăn các món Hà Nội trong 30 phút, gồm có các món..." spellcheck="false"></textarea>
+        <textarea id="video-title" autofocus placeholder="Ví dụ: Video về nấu ăn các món Hà Nội trong 30 phút, gồm có các món..." spellcheck="false"></textarea>
       </div>
 
       <div class="option">

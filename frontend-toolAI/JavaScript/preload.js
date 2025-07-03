@@ -23,3 +23,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
   goToPage: (page) => ipcRenderer.send('navigate-to', page)
 });
 
+// const { contextBridge } = require('electron');
+const dotenv = require('dotenv');
+dotenv.config();
+
+contextBridge.exposeInMainWorld('electronAPI', {
+  getApiKey: () => Promise.resolve(process.env.OPENAI_API_KEY)
+});

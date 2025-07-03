@@ -1,4 +1,5 @@
 // Modules to control application life and create native browser window
+// require('dotenv').config(); 
 const { app, BrowserWindow } = require('electron')
 const path = require('node:path')
 const { ipcMain } = require('electron');
@@ -9,6 +10,7 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     width:1000,
     height: 900,
+    title: "Tool AI",
     webPreferences: {
       nodeIntegration: true, 
       contextIsolation: false,
@@ -17,12 +19,29 @@ function createWindow () {
   })
   
   // and load the index.html of the app.
-  mainWindow.loadFile('../frontend-toolAI/src/login.html')
+  mainWindow.loadFile(path.join(__dirname, 'src', 'login.html'))
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
 }
+// Lắng nghe yêu cầu điều hướng từ renderer (menu.html)
+ipcMain.on('navigate-to', (event, targetHtml) => {
+  const filePath = path.join(__dirname, 'src', targetHtml);
+  if (mainWindow) {
+    mainWindow.loadFile(filePath);
+  }
+});
 
+// IPC từ renderer.js
+ipcMain.handle('generate-title', async (event, prompt) => {
+  const result = await generateTitle(prompt);
+  return result;
+});
+
+// Gửi API key cho renderer
+ipcMain.handle('get-api-key', () => {
+  return process.env.OPENAI_API_KEY;
+});
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -45,18 +64,3 @@ app.on('window-all-closed', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-
-// Lắng nghe yêu cầu điều hướng từ renderer (menu.html)
-ipcMain.on('navigate-to', (event, targetHtml) => {
-  const filePath = path.join(__dirname, 'src', targetHtml);
-  if (mainWindow) {
-    mainWindow.loadFile(filePath);
-  }
-});
-
-// IPC từ renderer.js
-ipcMain.handle('generate-title', async (event, prompt) => {
-  const result = await generateTitle(prompt);
-  return result;
-});
-

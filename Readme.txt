@@ -1,1 +1,2 @@
-Tạo giao diện cho chức năng 1 và 2
+Chạy lại npx webpack mỗi khi chỉnh sửa script hoặc main
+Sau đó mới chạy npm start

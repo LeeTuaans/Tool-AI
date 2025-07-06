@@ -50,5 +50,17 @@
   </div>
 
 <script src="../JavaScript/renderer.js"></script>
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+  const textarea = document.getElementById('video-title');
+  if (textarea) {
+    setTimeout(() => {
+      textarea.blur();    // ➤ Bước 1: ép blur đi trước
+      textarea.focus();   // ➤ Bước 2: focus lại
+    }, 300); // Cho delay lâu hơn chút để đảm bảo DOM hoàn tất
+  }
+});
+</script>
+
 </body>
 </html>

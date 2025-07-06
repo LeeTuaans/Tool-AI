@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
         alert(`Chào mừng, ${email}`);
         window.location.href = "menu.html";
       } catch (error) {
-        alert("Đăng nhập thất bại: " + error.message);
+        alert("Đăng nhập thất bại: Bạn sai gmail hoặc mật khẩu");
       }
     });
   }

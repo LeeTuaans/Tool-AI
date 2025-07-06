@@ -11,6 +11,7 @@ function createWindow () {
     width:1000,
     height: 900,
     title: "Tool AI",
+    show: false, // <- Quan trọng để đợi tới khi sẵn sàng
     webPreferences: {
       nodeIntegration: true, 
       contextIsolation: false,
@@ -21,14 +22,20 @@ function createWindow () {
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'src', 'login.html'))
 
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();   // Hiển thị đúng lúc
+    mainWindow.focus();  // Lấy focus để textarea hoạt động
+  });
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
-}
+} 
 // Lắng nghe yêu cầu điều hướng từ renderer (menu.html)
 ipcMain.on('navigate-to', (event, targetHtml) => {
   const filePath = path.join(__dirname, 'src', targetHtml);
   if (mainWindow) {
-    mainWindow.loadFile(filePath);
+    mainWindow.loadFile(filePath).then(() => {
+      mainWindow.focus(); // <-- ép cửa sổ lấy lại focus sau khi load
+    });
   }
 });
 

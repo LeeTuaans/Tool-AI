@@ -4,10 +4,10 @@ const youtubedl = require('youtube-dl-exec');
 const { v4: uuidv4 } = require('uuid');
 const axios = require('axios');
 const FormData = require('form-data');
-require('dotenv').config();
+require('dotenv').config({ path: path.join(__dirname, '../keyai.env') });
 
 // === Cấu hình ===
-// Đặt key trực tiếp ở đây nếu muốn
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY; // Đọc key từ file keyai.env
 const AUDIO_DIR = path.join(__dirname, '../audio');
 
 async function downloadAudio(youtubeUrl, audioPath) {

@@ -1,44 +1,52 @@
-// Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron')
-const path = require('node:path')
+const { app, BrowserWindow, ipcMain } = require('electron');
+const path = require('path');
+const { spawn } = require('child_process');
 
-function createWindow () {
-  // Create the browser window.
-  const mainWindow = new BrowserWindow({
-    width:1000,
-    height: 900,
-    webPreferences: {
-      contextIsolation: true, 
-      preload: path.join(__dirname, 'preload.js')
-    }
-  })
+function createWindow() {
+    const win = new BrowserWindow({
+        width: 700,
+        height: 500,
+        webPreferences: {
+            preload: path.join(__dirname, 'preload.js'),
+            contextIsolation: true,
+            nodeIntegration: false,
+        }
+    });
 
-  // and load the index.html of the app.
-  mainWindow.loadFile('../frontend-toolAI/src/login.html')
-
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+    // Sửa đường dẫn để load giao diện transcript.html
+    win.loadFile(path.join(__dirname, 'src', 'transcript.html'));
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
-  createWindow()
+app.whenReady().then(createWindow);
 
-  app.on('activate', function () {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
-  })
-})
+ipcMain.handle('start-transcription', async (event, youtubeUrl) => {
+    return new Promise((resolve, reject) => {
+        const pythonScript = path.join(__dirname, 'scripts', 'transcribe_and_create_script.js');
+        const py = spawn('node', [pythonScript, youtubeUrl], {
+            shell: true,
+            stdio: ['ignore', 'pipe', 'pipe']
+        });
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
-app.on('window-all-closed', function () {
-  if (process.platform !== 'darwin') app.quit()
-})
+        let output = '';
+        let errorOutput = '';
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
+        py.stdout.on('data', (data) => {
+            // Lọc bỏ các dòng log không mong muốn như [dotenv@...]
+            let text = data.toString();
+            text = text.replace(/\[dotenv@.*?\][^\n]*\n?/g, '');
+            output += text;
+        });
+
+        py.stderr.on('data', (data) => {
+            errorOutput += data.toString();
+        });
+
+        py.on('close', (code) => {
+            if (code === 0) {
+                resolve(output.trim());
+            } else {
+                reject(errorOutput || 'Unknown error');
+            }
+        });
+    });
+});

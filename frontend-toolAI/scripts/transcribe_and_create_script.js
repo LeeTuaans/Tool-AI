@@ -7,7 +7,7 @@ const FormData = require('form-data');
 require('dotenv').config();
 
 // === Cấu hình ===
-const OPENAI_API_KEY = "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"; // Đặt key trực tiếp ở đây nếu muốn
+const OPENAI_API_KEY = ""; // Đặt key trực tiếp ở đây nếu muốn
 const AUDIO_DIR = path.join(__dirname, '../audio');
 
 async function downloadAudio(youtubeUrl, audioPath) {

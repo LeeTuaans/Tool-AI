@@ -7,7 +7,7 @@ const FormData = require('form-data');
 require('dotenv').config();
 
 // === Cấu hình ===
-const OPENAI_API_KEY = ""; // Đặt key trực tiếp ở đây nếu muốn
+// Đặt key trực tiếp ở đây nếu muốn
 const AUDIO_DIR = path.join(__dirname, '../audio');
 
 async function downloadAudio(youtubeUrl, audioPath) {

@@ -22,26 +22,7 @@ function createWindow() {
   })
 
   // Load the index.html of the app.
-  mainWindow.loadFile('src/TTS.html')
-
-  // Open the DevTools for debugging
-  mainWindow.webContents.openDevTools()
-
-  // Handle save file dialog
-  ipcMain.handle('show-save-dialog', async (event, options) => {
-    const result = await dialog.showSaveDialog(mainWindow, options);
-    return result;
-  });
-
-  // Handle save file
-  ipcMain.handle('save-file', async (event, filePath, buffer) => {
-    try {
-      fs.writeFileSync(filePath, buffer);
-      return { success: true };
-    } catch (error) {
-      return { success: false, error: error.message };
-    }
-  });
+  mainWindow.loadFile('src/TTS.html') 
 }
 
 // This method will be called when Electron has finished

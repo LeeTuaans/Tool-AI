@@ -64,13 +64,6 @@
             flex-wrap: wrap;
         }
         
-        .controls-row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-        
         button {
             padding: 12px 24px;
             border: none;
@@ -110,24 +103,6 @@
             background-color: #c82333;
         }
         
-        .btn-success {
-            background-color: #28a745;
-            color: white;
-        }
-        
-        .btn-success:hover {
-            background-color: #218838;
-        }
-        
-        .btn-warning {
-            background-color: #ffc107;
-            color: #212529;
-        }
-        
-        .btn-warning:hover {
-            background-color: #e0a800;
-        }
-        
         button:disabled {
             opacity: 0.6;
             cursor: not-allowed;
@@ -163,67 +138,6 @@
             color: #666;
             margin-top: 5px;
         }
-        
-        .progress-bar {
-            width: 100%;
-            height: 20px;
-            background-color: #f0f0f0;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 10px;
-            display: none;
-        }
-        
-        .progress-fill {
-            height: 100%;
-            background-color: #007bff;
-            width: 0%;
-            transition: width 0.3s ease;
-        }
-        
-        .download-section {
-            margin-top: 20px;
-            padding: 20px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            border: 1px solid #dee2e6;
-        }
-        
-        .download-section h3 {
-            margin-top: 0;
-            color: #495057;
-        }
-        
-        .format-options {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
-        }
-        
-        .format-option {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .shortcuts-info {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #e9ecef;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-        
-        .shortcuts-info h4 {
-            margin-top: 0;
-            color: #495057;
-        }
-        
-        .shortcuts-info ul {
-            margin: 0;
-            padding-left: 20px;
-        }
     </style>
 </head>
 <body>
@@ -232,7 +146,7 @@
         
         <div class="form-group">
             <label for="text">Nhập văn bản cần đọc:</label>
-            <textarea id="text" placeholder="Nhập văn bản bạn muốn chuyển thành giọng nói...">Xin chào! Đây là công cụ chuyển văn bản thành giọng nói với khả năng tải xuống file âm thanh.</textarea>
+            <textarea id="text" placeholder="Nhập văn bản bạn muốn chuyển thành giọng nói...">Xin chào! Đây là công cụ chuyển văn bản thành giọng nói.</textarea>
         </div>
         
         <div class="form-group">
@@ -276,57 +190,17 @@
             </select>
         </div>
         
-        <div class="controls-row">
+        <div class="controls">
             <button id="speakBtn" class="btn-primary">🔊 Phát giọng nói</button>
             <button id="pauseBtn" class="btn-secondary">⏸️ Tạm dừng</button>
             <button id="resumeBtn" class="btn-secondary">▶️ Tiếp tục</button>
             <button id="stopBtn" class="btn-danger">⏹️ Dừng</button>
         </div>
         
-        <div class="download-section">
-            <h3>📥 Tải xuống file âm thanh</h3>
-            
-            <div class="form-group">
-                <label for="audioFormat">Định dạng file:</label>
-                <select id="audioFormat">
-                    <option value="webm">WebM (Chất lượng cao)</option>
-                    <option value="wav">WAV (Không nén)</option>
-                    <option value="mp3">MP3 (Tương thích cao)</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="audioQuality">Chất lượng âm thanh:</label>
-                <select id="audioQuality">
-                    <option value="128000">128 kbps (Tiêu chuẩn)</option>
-                    <option value="192000">192 kbps (Cao)</option>
-                    <option value="256000">256 kbps (Rất cao)</option>
-                    <option value="320000">320 kbps (Tối đa)</option>
-                </select>
-            </div>
-            
-            <button id="downloadBtn" class="btn-success">💾 Tải xuống âm thanh</button>
-            
-            <div class="progress-bar" id="progressBar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
-        </div>
-        
         <div id="status" class="status"></div>
-        
-        <div class="shortcuts-info">
-            <h4>⌨️ Phím tắt:</h4>
-            <ul>
-                <li><strong>Ctrl + Enter:</strong> Phát giọng nói</li>
-                <li><strong>Ctrl + Space:</strong> Tạm dừng/Tiếp tục</li>
-                <li><strong>Escape:</strong> Dừng phát</li>
-                <li><strong>Ctrl + S:</strong> Tải xuống âm thanh</li>
-            </ul>
-        </div>
     </div>
 
     <script src="../Javascript/tts.js"></script>
-    <script src="../Javascript/audio-recorder.js"></script>
     <script src="../Javascript/tts-page.js"></script>
 </body>
 </html>

@@ -46,9 +46,14 @@ ipcMain.handle('generate-title', async (event, prompt) => {
 });
 
 // Gửi API key cho renderer
+// ipcMain.handle('get-api-key', () => {
+//   return process.env.OPENAI_API_KEY;
+// });
+require('dotenv').config();
 ipcMain.handle('get-api-key', () => {
-  return process.env.OPENAI_API_KEY;
+  return process.env.GOOGLE_API_KEY;
 });
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.

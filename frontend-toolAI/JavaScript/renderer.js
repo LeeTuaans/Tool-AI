@@ -1,113 +1,78 @@
-// document.getElementById("generate-btn").addEventListener("click", async () => {
-//   const videoContent = document.getElementById("video-title").value.trim();
-//   const checkboxes = document.querySelectorAll('.checkbox-group input[type="checkbox"]:checked');
-
-//   if (!videoContent) {
-//     alert("Vui lòng nhập nội dung video.");
-//     return;
-//   }
-
-//   // Tạo prompt cho ChatGPT
-//   let options = Array.from(checkboxes).map(cb => cb.value).join(", ");
-//   let prompt = `Tạo tiêu đề video YouTube hấp dẫn, chuẩn SEO cho nội dung sau: "${videoContent}".`;
-//   if (options) {
-//     prompt += ` Yêu cầu thêm: ${options}.`;
-//   }
-// console.log("Đang gửi prompt:", prompt);
-
-//   // Gửi API request
-//   try {
-//     const response = await fetch("https://api.openai.com/v1/chat/completions", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//         "Authorization": `Bearer ${apiKey}`
-//       },
-//       body: JSON.stringify({
-//         model: "gpt-4", // hoặc gpt-3.5-turbo nếu bạn không có quyền GPT-4
-//         messages: [{ role: "user", content: prompt }]
-//       })
-//     });
-
-//     if (!response.ok) {
-//       const error = await response.text();
-//       alert(`Lỗi API: ${response.status}\n${error}`);
-//       return;
-//     }
-
-//     const data = await response.json();
-//     console.log("Kết quả trả về:", data);
-//     const content = data.choices[0].message.content;
-
-//     // Phân tách nội dung theo dòng và hiển thị
-//     const lines = content.split('\n').filter(line => line.trim() !== '');
-//     const suggestions = document.getElementById("suggested-titles");
-//     const others = document.getElementById("other-suggestions");
-//     suggestions.innerHTML = "";
-//     others.innerHTML = "";
-
-// lines.forEach((line, index) => {
-//   const li = document.createElement("li");
-//   li.textContent = line.replace(/^[-•"“”'•\d.|\s]+/, '').trim();
-
-//   if (index === 0) {
-//     // Gợi ý đầu tiên → Tiêu đề chính
-//     suggestions.appendChild(li);
-//   } else {
-//     // Các dòng sau → Gợi ý khác
-//     others.appendChild(li);
-//   }
-// });
-
-
-
-//   } catch (error) {
-//     alert("Đã xảy ra lỗi khi gọi API.\n" + error);
-//     console.error(error);
-//   }
-// });
-//-----------------------------------------------------------------------------------------------------
-// renderer.js
 require('dotenv').config();
-const apiKey = process.env.OPENAI_API_KEY;
+// const apiKey = process.env.OPENAI_API_KEY;
+const apiKey = process.env.GOOGLE_API_KEY;
 
 // ====== GẮN SỰ KIỆN CHO CÁC TRANG KHÁC NHAU ======
 window.addEventListener("DOMContentLoaded", () => {
-  const currentPage = window.location.pathname;
+  const generateBtn = document.getElementById("generate-btn");
+  const generateScriptBtn = document.getElementById("generate-script-btn");
 
-  if (currentPage.includes("create_title.html")) {
+  if (generateBtn) {
     setupTitleGenerator();
-  } else if (currentPage.includes("create_script.html")) {
+  }
+
+  if (generateScriptBtn) {
     setupScriptGenerator();
   }
 });
+
 
 // ====== HÀM DÙNG CHUNG ======
 function getCheckedOptions() {
   const checkboxes = document.querySelectorAll('.checkbox-group input[type="checkbox"]:checked');
   return Array.from(checkboxes).map(cb => cb.value).join(", ");
 }
+//funtion của ChatGPT
+// async function fetchGPTResponse(prompt) {
+//   const response = await fetch("https://api.openai.com/v1/chat/completions", {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//       "Authorization": `Bearer ${apiKey}`
+//     },
+//     body: JSON.stringify({
+//       model: "gpt-4o",
+//       messages: [{ role: "user", content: prompt }]
+//     })
+//   });
+
+//   if (!response.ok) {
+//     const error = await response.text();
+//     throw new Error(`Lỗi API: ${response.status}\n${error}`);
+//   }
+
+//   const data = await response.json();
+//   return data.choices[0].message.content;
+// }
 
 async function fetchGPTResponse(prompt) {
-  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${apiKey}`
+      "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      model: "gpt-4o",
-      messages: [{ role: "user", content: prompt }]
+      contents: [
+        {
+          parts: [{ text: prompt }]
+        }
+      ]
     })
   });
 
   if (!response.ok) {
     const error = await response.text();
-    throw new Error(`Lỗi API: ${response.status}\n${error}`);
+    throw new Error(`Lỗi API Gemini: ${response.status}\n${error}`);
   }
 
   const data = await response.json();
-  return data.choices[0].message.content;
+  const candidates = data.candidates;
+
+  if (!candidates || candidates.length === 0) {
+    throw new Error("Không có phản hồi từ Gemini.");
+  }
+
+  return candidates[0].content.parts[0].text;
 }
 
 
@@ -138,10 +103,11 @@ function setupTitleGenerator() {
 
       lines.forEach((line, index) => {
         const li = document.createElement("li");
-      let cleaned = line
-        .replace(/^[-•"“”'•\d.|\s]+/, '')
-        .replace(/\s*\|?\s*SEO Optimized"?$/i, '') 
-        .trim();
+        let cleaned = line
+          .replace(/[*_~`#>]+/g, '') // Xóa tất cả ký tự markdown như **, __, ~~, ``, #,...
+          .replace(/^[-•"“”'•\d.|\s]+/, '') // Xóa các ký tự đầu dòng như số thứ tự, gạch đầu dòng
+          .replace(/\s*\|?\s*SEO Optimized"?$/i, '') // Xóa phần đuôi SEO
+          .trim();
       li.textContent = cleaned;
         (index === 0 ? suggested : others).appendChild(li);
       });
@@ -178,9 +144,16 @@ function setupScriptGenerator() {
 
       lines.forEach((line, index) => {
         const li = document.createElement("li");
-        li.textContent = line.replace(/^[-•"“”'•\d.|\s]+/, '').trim();
+  
+        let cleaned = line
+          .replace(/[*_~`#>]+/g, '') // Xóa tất cả ký tự markdown như **, __, ~~, ``, #,...
+          .replace(/^[-•"“”'•\d.|\s]+/, '') // Xóa các ký tự đầu dòng như số thứ tự, gạch đầu dòng
+          .replace(/\s*\|?\s*SEO Optimized"?$/i, '') // Xóa phần đuôi SEO
+          .trim();
+        li.textContent = cleaned;
         (index === 0 ? main : others).appendChild(li);
       });
+
 
     } catch (err) {
       alert("Đã xảy ra lỗi khi gọi API.\n" + err.message);
@@ -190,7 +163,6 @@ function setupScriptGenerator() {
 
 //code dưới là thử focus nội dung trên chức năng
 const { ipcRenderer } = require('electron');
-
 window.addEventListener('DOMContentLoaded', () => {
   // Gửi yêu cầu focus từ renderer
   ipcRenderer.send('request-window-focus');

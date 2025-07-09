@@ -11,7 +11,7 @@ async function generateTTSBuffer(text, voice = 'shimmer', speed='1.0') {
   const response =await axios.post(
     'https://api.openai.com/v1/audio/speech',
    {
-    model: 'tts-1-hd',
+    model: 'tts-1',
     input: text,
     voice: voice,
     speed: parseFloat(speed),

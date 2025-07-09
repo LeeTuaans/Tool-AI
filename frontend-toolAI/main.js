@@ -1,24 +1,58 @@
 // Modules to control application life and create native browser window
+// require('dotenv').config(); 
 const { app, BrowserWindow } = require('electron')
 const path = require('node:path')
+const { ipcMain } = require('electron');
+let mainWindow; // Cần nâng scope lên toàn cục để load lại file
 
 function createWindow () {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width:1000,
     height: 900,
+    title: "Tool AI",
+    show: false, // <- Quan trọng để đợi tới khi sẵn sàng
     webPreferences: {
-      contextIsolation: true, 
-      preload: path.join(__dirname, 'preload.js')
+      nodeIntegration: true, 
+      contextIsolation: false,
+      // preload: path.join(__dirname, 'preload.js')
     }
   })
-
+  
   // and load the index.html of the app.
-  mainWindow.loadFile('../frontend-toolAI/src/TTS.html')
+  mainWindow.loadFile(path.join(__dirname, 'src', 'login.html'))
 
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();   // Hiển thị đúng lúc
+    mainWindow.focus();  // Lấy focus để textarea hoạt động
+  });
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
-}
+} 
+// Lắng nghe yêu cầu điều hướng từ renderer (menu.html)
+ipcMain.on('navigate-to', (event, targetHtml) => {
+  const filePath = path.join(__dirname, 'src', targetHtml);
+  if (mainWindow) {
+    mainWindow.loadFile(filePath).then(() => {
+      mainWindow.focus(); // <-- ép cửa sổ lấy lại focus sau khi load
+    });
+  }
+});
+
+// IPC từ renderer.js
+ipcMain.handle('generate-title', async (event, prompt) => {
+  const result = await generateTitle(prompt);
+  return result;
+});
+
+// Gửi API key cho renderer
+// ipcMain.handle('get-api-key', () => {
+//   return process.env.OPENAI_API_KEY;
+// });
+require('dotenv').config();
+ipcMain.handle('get-api-key', () => {
+  return process.env.GOOGLE_API_KEY;
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

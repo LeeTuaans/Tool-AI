@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>Đăng Ký - Tool AI</title>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval' data: blob:;">
     <link rel="stylesheet" href="../CSS/style.css" />
   </head>
   <body>
@@ -24,13 +24,12 @@
         <label for="confirm-password">Xác nhận mật khẩu</label>
         <input type="password" id="confirm-password" placeholder="Nhập lại mật khẩu" />
 
-        <button onclick="register()">Đăng Ký</button>
+        <button id="register-btn">Đăng Ký</button>
 
         <p style="margin-top: 15px;">Đã có tài khoản? <a href="../src/login.html">Đăng nhập</a></p>
       </div>
     </div>
-
-    <script src="./renderer.js"></script>
-    <script type="module" src="../frontend-toolAI/script.js"></script>
+    <script src="../JavaScript/renderer.js"></script>
+    <script src="../../frontend-toolAI/dist/bundle.js"></script>
   </body>
 </html>

@@ -1,6 +1,6 @@
 {
   "name": "frontend-tool-ai",
-  "productName": "frontend-toolAI",
+  "productName": "ToolAI",
   "description": "My Electron application description",
   "keywords": [],
   "main": "./main.js",
@@ -10,9 +10,16 @@
     "start": "electron ."
   },
   "dependencies": {
+    "dotenv": "^16.6.1",
     "firebase": "^11.9.1"
   },
   "devDependencies": {
-    "electron": "35.0.0"
+    "@babel/core": "^7.27.4",
+    "@babel/preset-env": "^7.27.2",
+    "babel-loader": "^10.0.0",
+    "electron": "^35.0.0",
+    "webpack": "^5.99.9",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
   }
 }

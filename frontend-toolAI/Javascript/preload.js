@@ -1,19 +1,6 @@
 const { contextBridge, ipcRenderer } = require('electron')
-window.addEventListener('DOMContentLoaded', () => {
-  const replaceText = (selector, text) => {
-    const element = document.getElementById(selector)
-    if (element) element.innerText = text
-  }
 
-  for (const type of ['chrome', 'node', 'electron']) {
-    replaceText(`${type}-version`, process.versions[type])
-  }
-});
-
-//tts 
 contextBridge.exposeInMainWorld('electronAPI', {
-  generateBufferOnly: (text, voice, speed) =>
-    ipcRenderer.invoke('tts:generate-buffer', { text, voice, speed }),
-  saveBuffer: (buffer) =>
-    ipcRenderer.invoke('tts:save-buffer', buffer)
-});
+  showSaveDialog: (options) => ipcRenderer.invoke('show-save-dialog', options),
+  saveFile: (filePath, buffer) => ipcRenderer.invoke('save-file', filePath, buffer)
+})

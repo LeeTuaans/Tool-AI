@@ -1,5 +1,7 @@
 // Modules to control application life and create native browser window
 // require('dotenv').config(); 
+const { spawn } = require('child_process');
+
 const { app, BrowserWindow } = require('electron')
 const path = require('node:path')
 const { ipcMain } = require('electron');
@@ -20,7 +22,7 @@ function createWindow () {
   })
   
   // and load the index.html of the app.
-  mainWindow.loadFile(path.join(__dirname, 'src', 'login.html'))
+  mainWindow.loadFile(path.join(__dirname, 'src', 'transcript.html'))
 
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();   // Hiển thị đúng lúc
@@ -76,3 +78,37 @@ app.on('window-all-closed', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+ipcMain.handle('start-transcription', async (event, youtubeUrl) => {
+    return new Promise((resolve, reject) => {
+        const pythonScript = path.join(__dirname, 'JavaScript', 'transcribe_and_create_script.js');
+        const py = spawn('node', [pythonScript, youtubeUrl], {
+            shell: true,
+            stdio: ['ignore', 'pipe', 'pipe']
+        });
+
+        let output = '';
+        let errorOutput = '';
+
+        py.stdout.on('data', (data) => {
+            // Lọc bỏ các dòng log không mong muốn như [dotenv@...]
+            let text = data.toString();
+            text = text.replace(/\[dotenv@.*?\][^\n]*\n?/g, '');
+            output += text;
+        });
+
+        py.stderr.on('data', (data) => {
+            errorOutput += data.toString();
+        });
+
+        py.on('close', (code) => {
+            if (code === 0) {
+                resolve(output.trim());
+            } else {
+                reject(errorOutput || 'Unknown error');
+            }
+        });
+    });
+});
+ipcMain.handle('get-gemini-key', () => {
+  return process.env.GEMINI_API_KEY;
+});

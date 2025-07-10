@@ -30,3 +30,9 @@ dotenv.config();
 contextBridge.exposeInMainWorld('electronAPI', {
   getApiKey: () => Promise.resolve(process.env.OPENAI_API_KEY)
 });
+
+contextBridge.exposeInMainWorld('transcriber', {
+    startTranscription: async (youtubeUrl) => {
+        return await ipcRenderer.invoke('start-transcription', youtubeUrl);
+    }
+});

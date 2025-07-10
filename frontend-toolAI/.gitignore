@@ -3,3 +3,7 @@ out
 .env
 dist/
 bachupcode.txt
+# Bỏ qua tất cả file mp3 trong thư mục audio/
+audio/*.mp3
+# Nhưng vẫn giữ lại thư mục audio/
+!audio/

@@ -79,7 +79,10 @@ async function main() {
 
     try {
         const script = await createScriptWithGemini(transcript);
-        process.stdout.write(script);
+        // process.stdout.write(script);
+        // Xoá các dấu * hoặc ** trong toàn bộ đoạn script
+        const cleanScript = script.replace(/\*{1,2}/g, '');
+        process.stdout.write(cleanScript);
     } catch (err) {
         console.error("Lỗi gọi Gemini:", err.response?.data || err);
         process.exit(4);

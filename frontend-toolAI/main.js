@@ -22,7 +22,7 @@ function createWindow () {
   })
   
   // and load the index.html of the app.
-  mainWindow.loadFile(path.join(__dirname, 'src', 'transcript.html'))
+  mainWindow.loadFile(path.join(__dirname, 'src', 'login.html'))
 
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();   // Hiển thị đúng lúc

@@ -167,6 +167,7 @@ ipcMain.on('run-createvideo-python', () => {
   const python = spawn('python', [pythonScriptPath], {
     shell: true,
     detached: true,
+    windowsHide: true, // Ẩn luôn cmd nếu không cần
     stdio: 'ignore', // Ẩn luôn cmd nếu không cần
   });
 

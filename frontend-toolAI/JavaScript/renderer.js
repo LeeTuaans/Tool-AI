@@ -162,13 +162,13 @@ function setupScriptGenerator() {
 }
 
 //code dưới là thử focus nội dung trên chức năng
-const { ipcRenderer } = require('electron');
-window.addEventListener('DOMContentLoaded', () => {
-  // Gửi yêu cầu focus từ renderer
-  ipcRenderer.send('request-window-focus');
-});
-ipcMain.on('request-window-focus', () => {
-  if (mainWindow) {
-    mainWindow.focus(); // ép cửa sổ lấy lại quyền nhập liệu
-  }
-});
+// const { ipcRenderer } = require('electron');
+// window.addEventListener('DOMContentLoaded', () => {
+//   // Gửi yêu cầu focus từ renderer
+//   ipcRenderer.send('request-window-focus');
+// });
+// ipcMain.on('request-window-focus', () => {
+//   if (mainWindow) {
+//     mainWindow.focus(); // ép cửa sổ lấy lại quyền nhập liệu
+//   }
+// });

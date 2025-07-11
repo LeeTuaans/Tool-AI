@@ -28,3 +28,7 @@ contextBridge.exposeInMainWorld('transcriber', {
         return await ipcRenderer.invoke('start-transcription', youtubeUrl);
     }
 });
+
+contextBridge.exposeInMainWorld("electronAPI", {
+    createVideo: (data) => ipcRenderer.send("create-video", data)
+});

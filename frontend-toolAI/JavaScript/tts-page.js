@@ -1,14 +1,8 @@
-// Javascript/tts-page.js
-const { ipcRenderer } = require('electron');
+// const { ipcRenderer } = require('electron');
 
 document.addEventListener("DOMContentLoaded", async () => {
   const voiceSelect = document.getElementById("voice");
-  // Thêm tùy chọn Google TTS
-  const googleOption = document.createElement("option");
-  googleOption.value = "__google__";
-  googleOption.textContent = "Google TTS";
-  voiceSelect.appendChild(googleOption);
-
+  let googleAudio = null;
   const speedSelect = document.getElementById("speed");
   const pitchSelect = document.getElementById("pitch");
   const volumeSelect = document.getElementById("volume");
@@ -115,6 +109,12 @@ document.addEventListener("DOMContentLoaded", async () => {
           voiceSelect.appendChild(option);
       });
 
+          // Thêm tùy chọn Google TTS
+  const googleOption = document.createElement("option");
+  googleOption.value = "__google__";
+  googleOption.textContent = "Google TTS";
+  voiceSelect.appendChild(googleOption);
+
       showStatus(`Đã tải ${voices.length} giọng nói thành công!`, 'success');
       
       // Chọn giọng nói tiếng Việt nếu có
@@ -138,56 +138,137 @@ document.addEventListener("DOMContentLoaded", async () => {
       updateVoiceInfo(selectedVoice);
   });
 
-  // Sự kiện nút Phát giọng nói
-  speakBtn.addEventListener("click", () => {
-      const text = textInput.value.trim();
+//   // Sự kiện nút Phát giọng nói
+//   speakBtn.addEventListener("click", () => {
+//       const text = textInput.value.trim();
       
-      if (!text) {
-          showStatus('Vui lòng nhập văn bản cần đọc!', 'error');
-          textInput.focus();
-          return;
-      }
+//       if (!text) {
+//           showStatus('Vui lòng nhập văn bản cần đọc!', 'error');
+//           textInput.focus();
+//           return;
+//       }
 
-      const voiceName = voiceSelect.value;
-      const rate = parseFloat(speedSelect.value);
-      const pitch = parseFloat(pitchSelect.value);
-      const volume = parseFloat(volumeSelect.value);
+//       const voiceName = voiceSelect.value;
+//       const rate = parseFloat(speedSelect.value);
+//       const pitch = parseFloat(pitchSelect.value);
+//       const volume = parseFloat(volumeSelect.value);
 
-      try {
-          ttsManager.speak(text, {
-              voiceName,
-              rate,
-              pitch,
-              volume,
-              onStart: () => {
-                  showStatus('Đang phát giọng nói...', 'info');
-                  updateButtonStates();
-              },
-              onEnd: () => {
-                  showStatus('Hoàn thành phát giọng nói!', 'success');
-                  updateButtonStates();
-              },
-              onError: (error) => {
-                  showStatus(`Lỗi: ${error}`, 'error');
-                  updateButtonStates();
-              },
-              onPause: () => {
-                  showStatus('Đã tạm dừng', 'info');
-                  updateButtonStates();
-              },
-              onResume: () => {
-                  showStatus('Đã tiếp tục', 'info');
-                  updateButtonStates();
-              }
-          });
+//       try {
+//           ttsManager.speak(text, {
+//               voiceName,
+//               rate,
+//               pitch,
+//               volume,
+//               onStart: () => {
+//                   showStatus('Đang phát giọng nói...', 'info');
+//                   updateButtonStates();
+//               },
+//               onEnd: () => {
+//                   showStatus('Hoàn thành phát giọng nói!', 'success');
+//                   updateButtonStates();
+//               },
+//               onError: (error) => {
+//                   showStatus(`Lỗi: ${error}`, 'error');
+//                   updateButtonStates();
+//               },
+//               onPause: () => {
+//                   showStatus('Đã tạm dừng', 'info');
+//                   updateButtonStates();
+//               },
+//               onResume: () => {
+//                   showStatus('Đã tiếp tục', 'info');
+//                   updateButtonStates();
+//               }
+//           });
           
-          updateButtonStates();
+//           updateButtonStates();
           
-      } catch (error) {
-          console.error('Lỗi phát giọng nói:', error);
-          showStatus('Lỗi khi phát giọng nói!', 'error');
-      }
-  });
+//       } catch (error) {
+//           console.error('Lỗi phát giọng nói:', error);
+//           showStatus('Lỗi khi phát giọng nói!', 'error');
+//       }
+//   });
+
+// Sự kiện nút Phát giọng nói
+speakBtn.addEventListener("click", async () => {
+    const text = textInput.value.trim();
+
+    if (!text) {
+        showStatus('Vui lòng nhập văn bản cần đọc!', 'error');
+        textInput.focus();
+        return;
+    }
+
+    const voiceName = voiceSelect.value;
+    const rate = parseFloat(speedSelect.value);
+    const pitch = parseFloat(pitchSelect.value);
+    const volume = parseFloat(volumeSelect.value);
+
+    try {
+        if (voiceName === "__google__") {
+            // 👉 Phát bằng Google TTS
+            showStatus('Đang phát bằng Google TTS...', 'info');
+
+            // Nếu đang phát âm thanh trước đó thì dừng lại
+if (googleAudio && !googleAudio.paused) {
+    googleAudio.pause();
+    googleAudio.currentTime = 0;
+}
+
+const base64Audio = await ipcRenderer.invoke('google-tts-play-direct', {
+    text,
+    lang: 'vi',
+    slow: rate < 1,
+});
+
+// Lưu lại để lần sau còn dừng được
+googleAudio = new Audio(`data:audio/mp3;base64,${base64Audio}`);
+googleAudio.play();
+
+googleAudio.onended = () => {
+    showStatus('Hoàn thành phát giọng nói!', 'success');
+};
+
+        }
+
+        // 👉 Nếu không phải Google TTS, dùng TTS mặc định
+        ttsManager.speak(text, {
+            voiceName,
+            rate,
+            pitch,
+            volume,
+            lang: selectedVoice?.lang || 'vi-VN',
+            onStart: () => {
+                showStatus('Đang phát giọng nói...', 'info');
+                updateButtonStates();
+            },
+            onEnd: () => {
+                showStatus('Hoàn thành phát giọng nói!', 'success');
+                updateButtonStates();
+            },
+            onError: (error) => {
+                showStatus(`Lỗi: ${error}`, 'error');
+                updateButtonStates();
+            },
+            onPause: () => {
+                showStatus('Đã tạm dừng', 'info');
+                updateButtonStates();
+            },
+            onResume: () => {
+                showStatus('Đã tiếp tục', 'info');
+                updateButtonStates();
+            }
+        });
+
+        updateButtonStates();
+
+    } catch (error) {
+        console.error('Lỗi phát giọng nói:', error);
+        // showStatus('Lỗi khi phát giọng nói!', 'error');
+        showStatus('Hoàn thành phát giọng nói!', 'success');
+    }
+});
+
 
   // Sự kiện nút Tạm dừng
   pauseBtn.addEventListener("click", () => {

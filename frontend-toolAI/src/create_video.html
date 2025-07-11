@@ -1,61 +1,42 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tạo Video</title>
-  <link rel="stylesheet" href="../CSS/style_create_video.css">
+    <meta charset="UTF-8">
+    <title>Tạo Video</title>
+    <script defer src="../JavaScript/create_video.js"></script>
+    <link rel="stylesheet" href="../CSS/style_create_video.css">
 </head>
 <body>
-  <div class="container">
-    <h1>🎬 <span class="title">Tạo video</span></h1>
+    <h1>Tạo Video</h1>
 
-    <div class="form-group">
-      <label>Tiêu đề video:</label>
-      <input type="text" id="title-input" />
-    </div>
+    <label>Tiêu đề video:</label>
+    <input id="title" type="text"><br>
 
-    <div class="form-group">
-      <label>Kịch bản:</label>
-      <textarea id="script-input" rows="8" spellcheck="false"></textarea>
-    </div>
+    <label>Kịch bản:</label><br>
+    <textarea id="script" rows="5" cols="60" spellcheck="false"></textarea><br>
 
-    <div class="form-group">
-      <label>Chọn giọng đọc:</label>
-      <input type="file" id="voice-file" />
-    </div>
+    <label>Giọng đọc:</label>
+    <input type="file" id="voice"><br>
 
-    <div class="form-group">
-      <label>Chọn nhạc nền:</label>
-      <input type="file" id="bgm-file" />
-    </div>
+    <label>Nhạc nền (tuỳ chọn):</label>
+    <input type="file" id="bgm"><br>
 
-    <div class="form-group">
-      <label>Âm lượng giọng nói:</label>
-      <input type="range" id="voice-volume" min="0" max="100" value="100" />
-      <span id="voice-volume-value">100</span>%
-    </div>
+    <label>Âm lượng giọng đọc:</label>
+    <input type="range" id="voiceVolume" min="0" max="100" value="100"><br>
 
-    <div class="form-group">
-      <label>Âm lượng nhạc nền:</label>
-      <input type="range" id="bgm-volume" min="0" max="100" value="20" />
-      <span id="bgm-volume-value">20</span>%
-    </div>
+    <label>Âm lượng nhạc nền:</label>
+    <input type="range" id="bgmVolume" min="0" max="100" value="20"><br>
 
-    <div class="form-group">
-      <label>Chế độ xử lý:</label>
-      <select id="processing-mode">
+    <label>Chế độ:</label>
+    <select id="mode">
         <option value="Thường">Thường</option>
         <option value="Tăng tốc">Tăng tốc</option>
-      </select>
-      <label><input type="checkbox" id="gpu-checkbox" /> Dùng GPU</label>
-    </div>
+    </select>
 
-    <div class="form-group">
-      <button id="start-video-btn">🎬 Tạo video</button>
-    </div>
-  </div>
+    <label><input type="checkbox" id="useGPU"> Dùng GPU</label><br><br>
 
-  <script src="js/create_video.js"></script>
+    <button id="createBtn">Tạo Video</button>
+
+    <pre id="log"></pre>
 </body>
 </html>

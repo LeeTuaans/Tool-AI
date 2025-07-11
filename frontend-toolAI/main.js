@@ -15,9 +15,9 @@ function createWindow () {
     title: "Tool AI",
     show: false, // <- Quan trọng để đợi tới khi sẵn sàng
     webPreferences: {
-      nodeIntegration: true, 
-      contextIsolation: false,
-      // preload: path.join(__dirname, 'preload.js')
+      nodeIntegration: true,    //False nếu ko dùng preload
+      contextIsolation: false,  //True nếu ko dùng preload
+      // preload: path.join(__dirname, 'JavaScript', 'preload.js')
     }
   })
   
@@ -140,6 +140,19 @@ ipcMain.handle('generate-mp3', async (event, { text, lang = 'vi', slow = false }
   return `file://${filepath}`; // Trả về để phát audio
 });
 
+ipcMain.handle('google-tts-play-direct', async (event, { text, lang = 'vi', slow = false }) => {
+  if (!text.trim()) throw new Error('Text is empty');
+
+  // Lấy audio dạng base64 từ Google TTS
+  const audioChunks = await gtts.getAllAudioBase64(text, { lang, slow });
+  const buffers = audioChunks.map(chunk => Buffer.from(chunk.base64, 'base64'));
+  const finalBuffer = Buffer.concat(buffers);
+
+  // Trả về dạng base64 để renderer phát
+  return finalBuffer.toString('base64');
+});
+
+
 ipcMain.handle("google-tts-get-all", async (event, text) => {
   const urls = await gtts.getAllAudioUrls(text, {
     lang: 'vi',
@@ -149,4 +162,21 @@ ipcMain.handle("google-tts-get-all", async (event, text) => {
   return urls; // trả về mảng { shortText, url }
 });
 
+// Nhận từ renderer
+ipcMain.on("create-video", (event, args) => {
+    const pythonScriptPath = path.join(__dirname, "python", "createvideo.py");
+    const jsonArgs = JSON.stringify(args);
+    const python = spawn("python", [pythonScriptPath, jsonArgs]);
 
+    python.stdout.on("data", (data) => {
+        console.log(`[PYTHON]: ${data}`);
+    });
+
+    python.stderr.on("data", (data) => {
+        console.error(`[PYTHON-ERROR]: ${data}`);
+    });
+
+    python.on("close", (code) => {
+        console.log(`Python script kết thúc với mã: ${code}`);
+    });
+});

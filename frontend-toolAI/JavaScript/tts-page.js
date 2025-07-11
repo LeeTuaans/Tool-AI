@@ -3,6 +3,12 @@ const { ipcRenderer } = require('electron');
 
 document.addEventListener("DOMContentLoaded", async () => {
   const voiceSelect = document.getElementById("voice");
+  // Thêm tùy chọn Google TTS
+  const googleOption = document.createElement("option");
+  googleOption.value = "__google__";
+  googleOption.textContent = "Google TTS";
+  voiceSelect.appendChild(googleOption);
+
   const speedSelect = document.getElementById("speed");
   const pitchSelect = document.getElementById("pitch");
   const volumeSelect = document.getElementById("volume");
@@ -14,7 +20,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   const status = document.getElementById("status");
   const voiceInfo = document.getElementById("voiceInfo");
   const exportBtn = document.getElementById('exportBtn');
-  const player = document.getElementById('player');
 
   exportBtn.addEventListener('click', async () => {
   const text = textInput.value.trim();

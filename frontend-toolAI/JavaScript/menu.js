@@ -5,7 +5,8 @@ window.addEventListener('DOMContentLoaded', () => {
     'goto-create-title': 'create_title.html',
     'goto-create_script': 'create_script.html',
     'goto-transcript': 'transcript.html',
-    'goto-TTS': 'TTS.html'
+    'goto-TTS': 'TTS.html',
+    'goto-create-video': 'create_video.html'
   };
 
   for (const id in routes) {

@@ -136,4 +136,44 @@ function resumeSpeech() {
 function stopSpeech() {
   ttsManager.stop();
 }
+const { ipcRenderer } = require('electron');
+document.getElementById("speakBtn").addEventListener("click", async () => {
+  const selectedVoice = document.getElementById("voice").value;
+  const text = document.getElementById("text").value;
+  const speed = parseFloat(document.getElementById("speed").value);
+  const pitch = parseFloat(document.getElementById("pitch").value);
 
+  if (selectedVoice === "__google__") {
+    try {
+      const urls = await ipcRenderer.invoke("google-tts-get-all", text);
+        playAudioSequentially(urls.map(u => u.url));
+      const audio = new Audio(url);
+      audio.play();
+    } catch (error) {
+      console.error("Google TTS Error:", error);
+    }
+  } else {
+    ttsManager.speak(text, {
+      voiceName: selectedVoice,
+      rate: speed,
+      pitch: pitch
+    });
+  }
+});
+
+function playAudioSequentially(urls) {
+  if (!urls || urls.length === 0) return;
+
+  let index = 0;
+  const audio = new Audio(urls[index]);
+
+  audio.addEventListener("ended", () => {
+    index++;
+    if (index < urls.length) {
+      audio.src = urls[index];
+      audio.play();
+    }
+  });
+
+  audio.play();
+}

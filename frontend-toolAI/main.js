@@ -22,7 +22,7 @@ function createWindow () {
   })
   
   // and load the index.html of the app.
-  mainWindow.loadFile(path.join(__dirname, 'src', 'TTS.html'))
+  mainWindow.loadFile(path.join(__dirname, 'src', 'menu.html'))
 
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();   // Hiển thị đúng lúc
@@ -108,9 +108,14 @@ ipcMain.handle('start-transcription', async (event, youtubeUrl) => {
 ipcMain.handle('generate-mp3', async (event, { text, lang = 'vi', slow = false }) => {
   if (!text.trim()) throw new Error('Text is empty');
 
-  const base64 = await gtts.getAudioBase64(text, { lang, slow });
-  const buffer = Buffer.from(base64, 'base64');
+  // Sử dụng getAllAudioBase64 để xử lý văn bản dài
+  const audioChunks = await gtts.getAllAudioBase64(text, { lang, slow });
 
+  // Tạo buffer từ từng đoạn base64 và nối lại
+  const buffers = audioChunks.map(chunk => Buffer.from(chunk.base64, 'base64'));
+  const finalBuffer = Buffer.concat(buffers);
+
+  // Tạo tên file duy nhất
   function getFormattedDateTime() {
     const now = new Date();
     const dd = String(now.getDate()).padStart(2, '0');
@@ -123,14 +128,25 @@ ipcMain.handle('generate-mp3', async (event, { text, lang = 'vi', slow = false }
   }
 
   const filename = `giongdoc_${getFormattedDateTime()}.mp3`;
-  
+
   const audioDir = path.join(__dirname, 'audio');
   if (!fs.existsSync(audioDir)) {
     fs.mkdirSync(audioDir, { recursive: true });
   }
 
   const filepath = path.join(audioDir, filename);
-  fs.writeFileSync(filepath, buffer);
-  
-  return `file://${filepath}`; // Trả về dạng file:// để phát audio
+  fs.writeFileSync(filepath, finalBuffer);
+
+  return `file://${filepath}`; // Trả về để phát audio
 });
+
+ipcMain.handle("google-tts-get-all", async (event, text) => {
+  const urls = await gtts.getAllAudioUrls(text, {
+    lang: 'vi',
+    slow: false,
+    host: 'https://translate.google.com',
+  });
+  return urls; // trả về mảng { shortText, url }
+});
+
+

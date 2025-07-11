@@ -68,7 +68,9 @@ async function main() {
 
 
     try {
-        execFileSync('python', ['whisper_transcribe.py', audioPath], { stdio: 'inherit' });
+        const whisperScriptPath = path.resolve(__dirname, '..', 'python', 'whisper_transcribe.py');
+        execFileSync('python', [whisperScriptPath, audioPath], { stdio: 'inherit' });
+
     } catch (err) {
         console.error("Lỗi khi chạy Whisper:", err.message);
         process.exit(3);

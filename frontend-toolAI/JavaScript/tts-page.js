@@ -1,4 +1,5 @@
 // Javascript/tts-page.js
+const { ipcRenderer } = require('electron');
 
 document.addEventListener("DOMContentLoaded", async () => {
   const voiceSelect = document.getElementById("voice");
@@ -12,6 +13,25 @@ document.addEventListener("DOMContentLoaded", async () => {
   const stopBtn = document.getElementById("stopBtn");
   const status = document.getElementById("status");
   const voiceInfo = document.getElementById("voiceInfo");
+  const exportBtn = document.getElementById('exportBtn');
+  const player = document.getElementById('player');
+
+  exportBtn.addEventListener('click', async () => {
+  const text = textInput.value.trim();
+  if (!text) {
+    return showStatus('Vui lòng nhập nội dung trước khi xuất MP3.', 'error');
+  }
+
+  try {
+    showStatus('Đang tạo file MP3…', 'info');
+    const filepath = await ipcRenderer.invoke('generate-mp3', { text, lang: 'vi', slow: false });
+
+    showStatus(`Đã lưu: ${filepath}`, 'success');
+
+  } catch (err) {
+    showStatus(`Lỗi khi tạo MP3: ${err.message}`, 'error');
+  }
+});
 
   // Hiển thị trạng thái
   function showStatus(message, type = 'success') {

@@ -2,6 +2,8 @@
 const { spawn } = require('child_process');
 const { app, BrowserWindow } = require('electron')
 const path = require('node:path')
+const fs = require('fs');
+const gtts = require('google-tts-api');
 const { ipcMain } = require('electron');
 let mainWindow; // Cần nâng scope lên toàn cục để load lại file
 
@@ -100,4 +102,35 @@ ipcMain.handle('start-transcription', async (event, youtubeUrl) => {
             }
         });
     });
+});
+
+//Xuất mp3 giọng đọc gg tts
+ipcMain.handle('generate-mp3', async (event, { text, lang = 'vi', slow = false }) => {
+  if (!text.trim()) throw new Error('Text is empty');
+
+  const base64 = await gtts.getAudioBase64(text, { lang, slow });
+  const buffer = Buffer.from(base64, 'base64');
+
+  function getFormattedDateTime() {
+    const now = new Date();
+    const dd = String(now.getDate()).padStart(2, '0');
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const yy = String(now.getFullYear()).slice(-2);
+    const hh = String(now.getHours()).padStart(2, '0');
+    const mi = String(now.getMinutes()).padStart(2, '0');
+    const ss = String(now.getSeconds()).padStart(2, '0');
+    return `${dd}-${mm}-${yy}_${hh}-${mi}-${ss}`;
+  }
+
+  const filename = `giongdoc_${getFormattedDateTime()}.mp3`;
+  
+  const audioDir = path.join(__dirname, 'audio');
+  if (!fs.existsSync(audioDir)) {
+    fs.mkdirSync(audioDir, { recursive: true });
+  }
+
+  const filepath = path.join(audioDir, filename);
+  fs.writeFileSync(filepath, buffer);
+  
+  return `file://${filepath}`; // Trả về dạng file:// để phát audio
 });

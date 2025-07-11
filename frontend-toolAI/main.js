@@ -1,7 +1,5 @@
-// Modules to control application life and create native browser window
 // require('dotenv').config(); 
 const { spawn } = require('child_process');
-
 const { app, BrowserWindow } = require('electron')
 const path = require('node:path')
 const { ipcMain } = require('electron');
@@ -22,15 +20,26 @@ function createWindow () {
   })
   
   // and load the index.html of the app.
-  mainWindow.loadFile(path.join(__dirname, 'src', 'transcript.html'))
+  mainWindow.loadFile(path.join(__dirname, 'src', 'TTS.html'))
 
   mainWindow.once('ready-to-show', () => {
     mainWindow.show();   // Hiển thị đúng lúc
     mainWindow.focus();  // Lấy focus để textarea hoạt động
   });
-  // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
 } 
+
+app.whenReady().then(() => {
+  createWindow()
+
+  app.on('activate', function () {
+    if (BrowserWindow.getAllWindows().length === 0) createWindow()
+  })
+})
+
+app.on('window-all-closed', function () {
+  if (process.platform !== 'darwin') app.quit()
+})
+
 // Lắng nghe yêu cầu điều hướng từ renderer (menu.html)
 ipcMain.on('navigate-to', (event, targetHtml) => {
   const filePath = path.join(__dirname, 'src', targetHtml);
@@ -41,11 +50,7 @@ ipcMain.on('navigate-to', (event, targetHtml) => {
   }
 });
 
-// IPC từ renderer.js
-ipcMain.handle('generate-title', async (event, prompt) => {
-  const result = await generateTitle(prompt);
-  return result;
-});
+//Hàm chức năng----------------------------------------------------------------------------------------
 
 // Gửi API key cho renderer
 // ipcMain.handle('get-api-key', () => {
@@ -55,29 +60,16 @@ require('dotenv').config();
 ipcMain.handle('get-api-key', () => {
   return process.env.GOOGLE_API_KEY;
 });
+ipcMain.handle('get-gemini-key', () => {
+  return process.env.GEMINI_API_KEY;
+});
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
-  createWindow()
+// IPC từ renderer.js
+ipcMain.handle('generate-title', async (event, prompt) => {
+  const result = await generateTitle(prompt);
+  return result;
+});
 
-  app.on('activate', function () {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
-  })
-})
-
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
-app.on('window-all-closed', function () {
-  if (process.platform !== 'darwin') app.quit()
-})
-
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
 ipcMain.handle('start-transcription', async (event, youtubeUrl) => {
     return new Promise((resolve, reject) => {
         const pythonScript = path.join(__dirname, 'JavaScript', 'transcribe_and_create_script.js');
@@ -108,7 +100,4 @@ ipcMain.handle('start-transcription', async (event, youtubeUrl) => {
             }
         });
     });
-});
-ipcMain.handle('get-gemini-key', () => {
-  return process.env.GEMINI_API_KEY;
 });

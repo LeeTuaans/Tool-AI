@@ -2,7 +2,7 @@ body {
   font-family: 'Inter', sans-serif;
   margin: 0;
   padding: 0;
-  background: #f9f9f9;
+  background: linear-gradient(to right, #4facfe, #00f2fe);
 }
 
 .container {
@@ -84,6 +84,8 @@ textarea {
 }
 /* Back button styles */
 .back-button-container {
+  margin-top: 20px;
+  margin-left: 30px;
   margin-bottom: 20px;
   text-align: left;
 }

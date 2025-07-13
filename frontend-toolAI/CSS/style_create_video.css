@@ -1,6 +1,6 @@
 body {
   font-family: 'Segoe UI', sans-serif;
-  background: #f5f7fa;
+  background: linear-gradient(to right, #4facfe, #00f2fe);
   margin: 0;
   padding: 20px;
 }

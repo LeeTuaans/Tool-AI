@@ -162,21 +162,14 @@ ipcMain.handle("google-tts-get-all", async (event, text) => {
   return urls; // trả về mảng { shortText, url }
 });
 
-// Nhận từ renderer
-ipcMain.on("create-video", (event, args) => {
-    const pythonScriptPath = path.join(__dirname, "python", "createvideo.py");
-    const jsonArgs = JSON.stringify(args);
-    const python = spawn("python", [pythonScriptPath, jsonArgs]);
+ipcMain.on('run-createvideo-python', () => {
+  const pythonScriptPath = path.join(__dirname, 'python', 'createvideo.py');
+  const python = spawn('python', [pythonScriptPath], {
+    shell: true,
+    detached: true,
+    windowsHide: true, // Ẩn luôn cmd nếu không cần
+    stdio: 'ignore', // Ẩn luôn cmd nếu không cần
+  });
 
-    python.stdout.on("data", (data) => {
-        console.log(`[PYTHON]: ${data}`);
-    });
-
-    python.stderr.on("data", (data) => {
-        console.error(`[PYTHON-ERROR]: ${data}`);
-    });
-
-    python.on("close", (code) => {
-        console.log(`Python script kết thúc với mã: ${code}`);
-    });
+  python.unref(); // Để không giữ tiến trình Electron
 });

@@ -91,8 +91,10 @@ function setupTitleGenerator() {
     if (options) prompt += ` Yêu cầu thêm: ${options}.`;
 
     try {
-      const responseText = await fetchGPTResponse(prompt);
-      const lines = responseText.split("\n").filter(l => l.trim());
+      const tieude = await fetchGPTResponse(prompt);
+      const cleanedResulttieude = removeIntro(tieude);
+      // const lines = responseText.split("\n").filter(l => l.trim());
+      const lines = cleanedResulttieude.split('\n').filter(line => line.trim());
 
       const suggested = document.getElementById("suggested-titles");
       const others = document.getElementById("other-suggestions");
@@ -100,6 +102,10 @@ function setupTitleGenerator() {
 
       suggested.innerHTML = "";
       others.innerHTML = "";
+
+      function removeIntro(text) {
+      return text.replace(/^Tuyệt vời!.*?(\n|$)/i, '').trim();
+      }
 
       lines.forEach((line, index) => {
         const li = document.createElement("li");
@@ -129,11 +135,14 @@ function setupScriptGenerator() {
 
     let prompt = `Viết kịch bản chi tiết, hấp dẫn cho video YouTube với tiêu đề: "${title}".`;
     const options = getCheckedOptions();
-    if (options) prompt += ` Yêu cầu thêm: ${options}.`;
+    if (options.includes("one-line-script")) {prompt += " Viết kịch bản gọn, liên tục, không xuống dòng, không thêm mô tả giới thiệu. Trả về toàn bộ trong 1 dòng.";}
+    else if (options) prompt += ` Yêu cầu thêm: ${options}.`;
 
     try {
-      const result = await fetchGPTResponse(prompt);
-      const lines = result.split('\n').filter(line => line.trim());
+      const resultkichban = await fetchGPTResponse(prompt);
+      const cleanedResultkichban = removeIntro(resultkichban);
+      // const lines = result.split('\n').filter(line => line.trim());
+      const lines = cleanedResultkichban.split('\n').filter(line => line.trim());
 
       const main = document.getElementById("suggested-script");
       const others = document.getElementById("other-script-suggestions");
@@ -141,6 +150,10 @@ function setupScriptGenerator() {
 
       main.innerHTML = "";
       others.innerHTML = "";
+
+      function removeIntro(text) {
+      return text.replace(/^Tuyệt vời!.*?(\n|$)/i, '').trim();
+      }
 
       lines.forEach((line, index) => {
         const li = document.createElement("li");

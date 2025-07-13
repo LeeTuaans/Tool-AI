@@ -3,4 +3,4 @@ out
 .env
 dist/
 bachupcode.txt
-create_video.py
+python/createvideo.py
